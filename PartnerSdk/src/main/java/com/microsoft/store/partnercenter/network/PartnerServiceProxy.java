@@ -6,26 +6,6 @@
 
 package com.microsoft.store.partnercenter.network;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.MessageFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.UUID;
-
-import org.apache.http.HttpHost;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.RequestBuilder;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -49,8 +29,27 @@ import com.microsoft.store.partnercenter.requestcontext.IRequestContext;
 import com.microsoft.store.partnercenter.requestcontext.RequestContext;
 import com.microsoft.store.partnercenter.requestcontext.RequestContextFactory;
 import com.microsoft.store.partnercenter.utils.InvoiceLineItemDeserializer;
-import com.microsoft.store.partnercenter.utils.UriDeserializer;
 import com.microsoft.store.partnercenter.utils.StringHelper;
+import com.microsoft.store.partnercenter.utils.UriDeserializer;
+import org.apache.http.HttpHost;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.charset.UnsupportedCharsetException;
+import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.UUID;
 
 /**
  * An implementation of the partner service proxy which automatically serializes request content into JSON payload and
@@ -395,9 +394,9 @@ public class PartnerServiceProxy<TRequest, TResponse>
         RequestBuilder request = RequestBuilder.post( this.buildPartnerServiceApiUri() );
         try
         {
-            request.setEntity( new StringEntity( getJsonConverter().writeValueAsString( content ) ) );
+            request.setEntity( new StringEntity( getJsonConverter().writeValueAsString( content ), "UTF-8" ) );
         }
-        catch ( UnsupportedEncodingException e )
+        catch ( UnsupportedCharsetException e )
         {
             throw new PartnerException( "", this.requestContext, PartnerErrorCategory.REQUEST_PARSING );
         }
@@ -421,9 +420,9 @@ public class PartnerServiceProxy<TRequest, TResponse>
         RequestBuilder request = RequestBuilder.patch( this.buildPartnerServiceApiUri() );
         try
         {
-            request.setEntity( new StringEntity( getJsonConverter().writeValueAsString( content ) ) );
+            request.setEntity( new StringEntity( getJsonConverter().writeValueAsString( content ), "UTF-8" ) );
         }
-        catch ( UnsupportedEncodingException e )
+        catch ( UnsupportedCharsetException e )
         {
             throw new PartnerException( "", this.requestContext, PartnerErrorCategory.REQUEST_PARSING );
         }
@@ -447,9 +446,9 @@ public class PartnerServiceProxy<TRequest, TResponse>
         RequestBuilder request = RequestBuilder.put( this.buildPartnerServiceApiUri() );
         try
         {
-            request.setEntity( new StringEntity( getJsonConverter().writeValueAsString( content ) ) );
+            request.setEntity( new StringEntity( getJsonConverter().writeValueAsString( content ), "UTF-8" ) );
         }
-        catch ( UnsupportedEncodingException e )
+        catch ( UnsupportedCharsetException e )
         {
             throw new PartnerException( "", this.requestContext, PartnerErrorCategory.REQUEST_PARSING );
         }
